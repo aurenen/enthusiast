@@ -29,18 +29,16 @@ function get_setting( $setting ) {
 
    $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = '$setting'";
 
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
       or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   $result = mysql_query( $query );
+   $result = mysql_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
          'Error executing query: <i>' . mysql_error() .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
    }
-   $row = mysql_fetch_array( $result );
+   $row = mysqli_fetch_array( $result );
    return $row['value'];
 
 } // end of get_setting
