@@ -1,3 +1,6 @@
+*note: this fork's purpose is to mainly switch out old and 
+(soon-to-be) deprecated functions so that enth will be secure 
+to use in future versions of PHP.
 
 Enthusiast
 -----------------------------
