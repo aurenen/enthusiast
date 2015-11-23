@@ -126,55 +126,54 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
 
    if( count( $errors ) == 0 ) { // continue now
       // try to connect
-      $db_link = mysql_connect( $db_server, $db_user, $db_password )
+      $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
          or die( '<p class="error">Cannot connect to the database. ' .
-            'Try again.</p>' );
-      mysql_select_db( $db_database )
+            'Try again.</p>' )
          or die( '<p class="error">Cannot connect to the database. ' .
             'Try again.</p>' );
 
       // create collective affiliates table
       $query = "CREATE TABLE `$db_affiliates` (" .
-         '`affiliateid` int(5) NOT NULL auto_increment,' .
+         '`affiliateid` int NOT NULL auto_increment,' .
          '`url` varchar(254) NOT NULL default \'\',' .
          '`title` varchar(254) NOT NULL default \'\',' .
          '`imagefile` varchar(254) default NULL,' .
          '`email` varchar(255) NOT NULL default \'\',' .
          '`added` date default NULL,' .
          'PRIMARY KEY  (`affiliateid`)' .
-         ') TYPE=MyISAM AUTO_INCREMENT=1';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+         ') ENGINE=MyISAM AUTO_INCREMENT=1';
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       // create categories table
       $query = "CREATE TABLE `$db_category` (" .
-         '`catid` int(5) NOT NULL auto_increment, ' .
+         '`catid` int NOT NULL auto_increment, ' .
          '`catname` varchar(255) NOT NULL default \'\', ' .
-         '`parent` int(5) NOT NULL DEFAULT \'0\', ' .
+         '`parent` int NOT NULL DEFAULT \'0\', ' .
          'PRIMARY KEY  (`catid`)' .
-         ') TYPE=MyISAM AUTO_INCREMENT=1';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+         ') ENGINE=MyISAM AUTO_INCREMENT=1';
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       // create email templates table
       $query = "CREATE TABLE `$db_emailtemplate` (" .
-         '`templateid` int(3) NOT NULL auto_increment,' .
+         '`templateid` int NOT NULL auto_increment,' .
          '`templatename` varchar(255) NOT NULL default \'\',' .
          '`subject` varchar(255) NOT NULL default \'\',' .
          '`content` text NOT NULL,' .
-         '`deletable` tinyint(1) NOT NULL default \'1\',' .
+         '`deletable` tinyint NOT NULL default \'1\',' .
          'PRIMARY KEY  (`templateid`)' .
-         ') TYPE=MyISAM AUTO_INCREMENT=2';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+         ') ENGINE=MyISAM AUTO_INCREMENT=2';
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_emailtemplate` VALUES (1, 'Add Affiliate " .
          'Template\', \'Affiliation with $$site_title$$\', ' .
@@ -183,10 +182,10 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          'as an affiliate at $$site_title$$, ' .
          'found at $$site_url$$. :)\r\n\r\nSincerely,\r\n$$' .
          'site_owner$$\', 0 )';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       // create joined table
@@ -202,16 +201,16 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          '`pending` tinyint(1) NOT NULL default \'0\',' .
          'PRIMARY KEY  (`joinedid`),' .
          'FULLTEXT KEY `subject` (`subject`,`desc`,`comments`)' .
-         ') TYPE=MyISAM AUTO_INCREMENT=1';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+         ') ENGINE=MyISAM AUTO_INCREMENT=1';
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       // create owned table
       $query = "CREATE TABLE `$db_owned` (" .
-         '`listingid` int(8) NOT NULL auto_increment,' .
+         '`listingid` int NOT NULL auto_increment,' .
          '`dbserver` varchar(255) NOT NULL default \'\',' .
          '`dbuser` varchar(255) NOT NULL default \'\',' .
          '`dbpassword` varchar(255) NOT NULL default \'\',' .
@@ -225,12 +224,12 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          '`desc` text,' .
          '`catid` varchar(255) NOT NULL default \'0\',' .
          '`listingtype` varchar(255) NOT NULL default \'fanlisting\',' .
-         '`country` tinyint(1) NOT NULL default \'1\',' .
-         '`affiliates` tinyint(1) NOT NULL default \'0\',' .
+         '`country` tinyint NOT NULL default \'1\',' .
+         '`affiliates` tinyint NOT NULL default \'0\',' .
          '`affiliatesdir` varchar(255) default NULL,' .
-         '`dropdown` tinyint(1) NOT NULL default \'1\',' .
+         '`dropdown` tinyint NOT NULL default \'1\',' .
          '`sort` varchar(255) NOT NULL default \'country\',' .
-         '`perpage` int(3) NOT NULL default \'25\',' .
+         '`perpage` int NOT NULL default \'25\',' .
          '`linktarget` varchar(255) NOT NULL default \'_top\',' .
          '`additional` text,' .
          '`joinpage` varchar(255) NOT NULL default \'join.php\',' .
@@ -244,17 +243,17 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          '`listtemplate` text NOT NULL,' .
          '`affiliatestemplate` text,' .
          '`statstemplate` text,' .
-         '`notifynew` tinyint(1) NOT NULL default \'1\',' .
-         '`holdupdate` tinyint(1) NOT NULL default \'0\',' .
+         '`notifynew` tinyint NOT NULL default \'1\',' .
+         '`holdupdate` tinyint NOT NULL default \'0\',' .
          '`opened` date default NULL,' .
-         '`status` tinyint(1) NOT NULL default \'0\',' .
+         '`status` tinyint NOT NULL default \'0\',' .
          'PRIMARY KEY  (`listingid`),' .
          'FULLTEXT KEY `title` (`title`,`subject`,`url`,`desc`)' .
-         ') TYPE=MyISAM AUTO_INCREMENT=1';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+         ') ENGINE=MyISAM AUTO_INCREMENT=1';
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       // create error logs table
@@ -262,10 +261,10 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          '`date` DATETIME NOT NULL ,' .
          '`source` VARCHAR( 100 ) NOT NULL ,' .
          '`log` TEXT NOT NULL )';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       // create settings table
@@ -275,11 +274,11 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          '`value` text NOT NULL,' .
          '`help` text NOT NULL,' .
          'PRIMARY KEY  (`setting`)' .
-         ') TYPE=MyISAM';
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+         ') ENGINE=MyISAM';
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       // populate settings table, templates first
@@ -288,54 +287,54 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          "src=\"enth3-image\" width=\"enth3-width\" height=\"enth3-height\" " .
          "border=\"0\" alt=\" enth3-title\" /></a> ', 'Template for showing " .
          "collective affiliates.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ( " .
          "'affiliates_template_footer', 'Affiliates template footer', '</p>', " .
          "'Text that is inserted directly after the collective affiliates are " .
          "shown.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ( " .
          "'affiliates_template_header', 'Affiliates template header', " .
          "'<p class=\"center\">', 'Text inserted directly before collective " .
          "affiliates are shown.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ('joined_template', " .
          "'Joined fanlistings template', '<a href=\"enth3-url\"><img " .
          "src=\"enth3-image\" width=\"enth3-width\" height=\"enth3-height\" " .
          "border=\"0\" alt=\" enth3-subject: enth3-desc\" /></a> ', " .
          "'Template for showing joined fanlistings.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link,$query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ('joined_template_footer', " .
          "'Joined template footer', '</p>', 'Text that is inserted directly " .
          "after the joined listings are shown.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ('joined_template_header', " .
          "'Joined template header', '<p class=\"center\">', " .
          "'Text inserted directly before joined listings are shown.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ('owned_template', " .
          "'Owned fanlistings template', '<p class=\"center\"><a " .
@@ -344,25 +343,25 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
          "/></a><br />\r\n<b>enth3-title: enth3-subject</b><br />\r\n<b><a " .
          "href=\"enth3-url\">enth3-url</a></b><br />\r\nenth3-desc</p>', " .
          "'Template for showing owned fanlistings.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ('owned_template_footer', " .
          "'Owned template footer', '</p>', 'owned listings are shown.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
       $query = "INSERT INTO `$db_settings` VALUES ('owned_template_header', " .
          "'Owned template header', '<p class=\"center\">', 'Text inserted " .
          "directly before owned listings are shown.')";
-      $success = mysql_query( $query ) or die( '<p class="error">Error ' .
-         'executing query: ' . mysql_error() . '; <i>' . $query . '</i></p>' );
+      $success = mysqli_query( $db_link, $query ) or die( '<p class="error">Error ' .
+         'executing query: ' . mysqli_error($db_link) . '; <i>' . $query . '</i></p>' );
       if( !$success )
-         echo '<p class="error">Query unsuccessful: ' . mysql_error() . ' ' .
+         echo '<p class="error">Query unsuccessful: ' . mysqli_error($db_link) . ' ' .
             $query . '</p>';
 
       foreach( $_POST as $field => $value ) {
@@ -484,12 +483,12 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
                   "'$title', MD5( '$value' ), '$help')";
                }
             if( $field != 'passwordv' ) {
-               $success = mysql_query( $query ) or die( '<p class="error">' .
-                  'Error executing query: ' . mysql_error() . '; <i>' . $query .
+               $success = mysqli_query( $db_link, $query ) or die( '<p class="error">' .
+                  'Error executing query: ' . mysqli_error($db_link) . '; <i>' . $query .
                   '</i></p>' );
                if( !$success )
                   echo '<p class="error">Query unsuccessful: ' .
-                     mysql_error() . ' ' . $query . '</p>';
+                     mysqli_error($db_link) . ' ' . $query . '</p>';
             }
          }
       }
