@@ -31,10 +31,8 @@ require_once( 'config.php' );
 if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
 
    // try to connect
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
 
    // create cats array
    $cats = array();
@@ -119,7 +117,7 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
    foreach( $cats as $cat ) {
       // create query
       $query = "INSERT INTO `$db_category` VALUES (null, '$cat', '0')";
-      $result = mysql_query( $query );
+      $result = mysqli_query( $db_link, $query );
       if( $result )
          $installed++;
    }

@@ -128,8 +128,6 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
       // try to connect
       $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
          or die( '<p class="error">Cannot connect to the database. ' .
-            'Try again.</p>' )
-         or die( '<p class="error">Cannot connect to the database. ' .
             'Try again.</p>' );
 
       // create collective affiliates table
