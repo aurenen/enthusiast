@@ -30,11 +30,11 @@ function get_setting( $setting ) {
    $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = '$setting'";
 
    $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   $result = mysql_query( $db_link, $query );
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
+   $result = mysqli_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
-         'Error executing query: <i>' . mysql_error() .
+         'Error executing query: <i>' . mysqli_error($db_link) .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
    }
@@ -51,18 +51,16 @@ function check_password( $password ) {
    $query = "SELECT * FROM `$db_settings` WHERE `setting` = 'password' AND ";
    $query .= "`value` = '$password'";
 
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   $result = mysql_query( $query );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
+   $result = mysqli_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
-         'Error executing query: <i>' . mysql_error() .
+         'Error executing query: <i>' . mysqli_error($db_link) .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
    }
-   if( mysql_num_rows( $result ) > 0 )
+   if( mysqli_num_rows( $result ) > 0 )
       return true;
    else
       return false;
@@ -74,18 +72,16 @@ function get_setting_title( $setting ) {
    include 'config.php';
 
    $query = "SELECT `title` FROM `$db_settings` WHERE `setting` = '$setting'";
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   $result = mysql_query( $query );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
+   $result = mysqli_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
-         'Error executing query: <i>' . mysql_error() .
+         'Error executing query: <i>' . mysqli_error($db_link) .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
    }
-   $row = mysql_fetch_array( $result );
+   $row = mysqli_fetch_array( $result );
    return $row['title'];
 
 } // end of get_setting_title
@@ -96,18 +92,16 @@ function get_setting_desc( $setting ) {
    include 'config.php';
 
    $query = "SELECT `help` FROM `$db_settings` WHERE `setting` = '$setting'";
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   $result = mysql_query( $query );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
+   $result = mysqli_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
-         'Error executing query: <i>' . mysql_error() .
+         'Error executing query: <i>' . mysqli_error($db_link) .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
    }
-   $row = mysql_fetch_array( $result );
+   $row = mysqli_fetch_array( $result );
    return $row['help'];
 
 } // end of get_setting_desc
@@ -119,20 +113,18 @@ function get_all_settings() {
 
    $query = "SELECT * FROM `$db_settings` WHERE `setting` " .
       "NOT LIKE '%template%'";
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   $result = mysql_query( $query );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
+   $result = mysqli_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
-         'Error executing query: <i>' . mysql_error() .
+         'Error executing query: <i>' . mysqli_error($db_link) .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
    }
 
    $settings = array();
-   while( $row = mysql_fetch_array( $result ) )
+   while( $row = mysqli_fetch_array( $result ) )
       $settings[] = $row;
    return $settings;
 
@@ -144,19 +136,17 @@ function get_all_templates() {
    include 'config.php';
 
    $query = "SELECT * FROM `$db_settings` WHERE `setting` LIKE '%template%'";
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   $result = mysql_query( $query );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
+   $result = mysqli_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
-         'Error executing query: <i>' . mysql_error() .
+         'Error executing query: <i>' . mysqli_error($db_link) .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
    }
    $templates = array();
-   while( $row = mysql_fetch_array( $result ) )
+   while( $row = mysqli_fetch_array( $result ) )
       $templates[] = $row;
    return $templates;
 
@@ -167,28 +157,26 @@ function get_all_templates() {
 function update_setting( $setting, $value ) {
    include 'config.php';
 
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
 
    if( $setting != 'password' ) {
       $query = "UPDATE `$db_settings` SET `value` = '$value' WHERE " .
          "`setting` = '$setting'";
-      $result = mysql_query( $query );
+      $result = mysqli_query( $db_link, $query );
       if( !$result ) {
          log_error( __FILE__ . ':' . __LINE__,
-            'Error executing query: <i>' . mysql_error() .
+            'Error executing query: <i>' . mysqli_error($db_link) .
             '</i>; Query is: <code>' . $query . '</code>' );
          die( STANDARD_ERROR );
       }
    } else {
       $query = "UPDATE `$db_settings` SET `value` = MD5( '$value' ) " .
          "WHERE `setting` = 'password'";
-      $result = mysql_query( $query );
+      $result = mysqli_query( $db_link, $query );
       if( !$result ) {
          log_error( __FILE__ . ':' . __LINE__,
-            'Error executing query: <i>' . mysql_error() .
+            'Error executing query: <i>' . mysqli_error($db_link) .
             '</i>; Query is: <code>' . $query . '</code>' );
          die( STANDARD_ERROR );
       }
@@ -200,10 +188,8 @@ function update_setting( $setting, $value ) {
 /*___________________________________________________________________________*/
 function update_settings( $settings ) {
    include 'config.php';
-   $db_link = mysql_connect( $db_server, $db_user, $db_password )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
-   mysql_select_db( $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysql_error() );
+   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
 
    foreach( $settings as $field => $value ) {
       $query = "UPDATE `$db_settings` SET `value` = '$value' WHERE " .
@@ -217,10 +203,10 @@ function update_settings( $settings ) {
             $query = '';
       }
       if( $query != '' ) {
-         $result = mysql_query( $query );
+         $result = mysqli_query( $db_link, $query );
          if( !$result ) {
             log_error( __FILE__ . ':' . __LINE__,
-               'Error executing query: <i>' . mysql_error() .
+               'Error executing query: <i>' . mysqli_error($db_link) .
                '</i>; Query is: <code>' . $query . '</code>' );
             die( STANDARD_ERROR );
          }
