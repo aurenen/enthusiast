@@ -27,11 +27,30 @@
 function get_setting( $setting ) {
    include 'config.php';
 
-   $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = '$setting'";
+   /*$query = "SELECT `value` FROM `$db_settings` WHERE `setting` = '$setting'";
 
    $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
-      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
-   $result = mysqli_query( $db_link, $query );
+      or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );*/
+
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
+   }
+   $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = ?";
+
+   $stmt = $db_link->prepare($query);
+   if (!$stmt) 
+     fail('MySQL get_setting prepare', $stmt->error);
+   if (!$stmt->bind_param('s', $setting))
+     fail('MySQL get_setting bind_param', $stmt->error);
+   if (!$stmt->execute())
+     fail('MySQL get_setting execute', $stmt->error);
+   if (!$stmt->bind_result($value))
+     fail('MySQL get_setting bind_result', $stmt->error);
+   if (!$stmt->fetch() && $stmt->errno)
+     fail('MySQL get_setting fetch', $stmt->error);
+
+   /* $result = mysqli_query( $db_link, $query );
    if( !$result ) {
       log_error( __FILE__ . ':' . __LINE__,
          'Error executing query: <i>' . mysqli_error($db_link) .
@@ -39,7 +58,9 @@ function get_setting( $setting ) {
       die( STANDARD_ERROR );
    }
    $row = mysqli_fetch_array( $result );
-   return $row['value'];
+   return $row['value'];*/
+   $db_link->close();
+   return $value;
 
 } // end of get_setting
 
@@ -48,7 +69,7 @@ function get_setting( $setting ) {
 function check_password( $password ) {
    include 'config.php';
 
-   $query = "SELECT * FROM `$db_settings` WHERE `setting` = 'password' AND ";
+   /*$query = "SELECT * FROM `$db_settings` WHERE `setting` = 'password' AND ";
    $query .= "`value` = '$password'";
 
    $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
@@ -59,9 +80,23 @@ function check_password( $password ) {
          'Error executing query: <i>' . mysqli_error($db_link) .
          '</i>; Query is: <code>' . $query . '</code>' );
       die( STANDARD_ERROR );
+   }*/
+
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
    }
-   if( mysqli_num_rows( $result ) > 0 )
+   $query = "SELECT * FROM `$db_settings` WHERE `setting` = 'password' AND `value` = ?";
+   $stmt = $db_link->prepare($query);
+   $stmt->bind_param('s', $password);
+   $stmt->execute();
+   $stmt->store_result();
+
+   if ($stmt->num_rows > 0) {
+      $stmt->close();
+      $db_link->close();
       return true;
+   }
    else
       return false;
 }
@@ -71,7 +106,7 @@ function check_password( $password ) {
 function get_setting_title( $setting ) {
    include 'config.php';
 
-   $query = "SELECT `title` FROM `$db_settings` WHERE `setting` = '$setting'";
+   /*$query = "SELECT `title` FROM `$db_settings` WHERE `setting` = '$setting'";
    $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
       or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
    $result = mysqli_query( $db_link, $query );
@@ -82,8 +117,28 @@ function get_setting_title( $setting ) {
       die( STANDARD_ERROR );
    }
    $row = mysqli_fetch_array( $result );
-   return $row['title'];
+   return $row['title'];*/
 
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
+   }
+   $query = "SELECT `title` FROM `$db_settings` WHERE `setting` = ?";
+
+   $stmt = $db_link->prepare($query);
+   if (!$stmt) 
+     fail('MySQL get_setting_title prepare', $stmt->error);
+   if (!$stmt->bind_param('s', $setting))
+     fail('MySQL get_setting_title bind_param', $stmt->error);
+   if (!$stmt->execute())
+     fail('MySQL get_setting_title execute', $stmt->error);
+   if (!$stmt->bind_result($title))
+     fail('MySQL get_setting_title bind_result', $stmt->error);
+   if (!$stmt->fetch() && $stmt->errno)
+     fail('MySQL get_setting_title fetch', $stmt->error);
+
+   $db_link->close();
+   return $title;
 } // end of get_setting_title
 
 
@@ -91,7 +146,7 @@ function get_setting_title( $setting ) {
 function get_setting_desc( $setting ) {
    include 'config.php';
 
-   $query = "SELECT `help` FROM `$db_settings` WHERE `setting` = '$setting'";
+   /*$query = "SELECT `help` FROM `$db_settings` WHERE `setting` = '$setting'";
    $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
       or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
    $result = mysqli_query( $db_link, $query );
@@ -102,8 +157,27 @@ function get_setting_desc( $setting ) {
       die( STANDARD_ERROR );
    }
    $row = mysqli_fetch_array( $result );
-   return $row['help'];
+   return $row['help'];*/
 
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
+   }
+   $query = "SELECT `help` FROM `$db_settings` WHERE `setting` = ?";
+   $stmt = $db_link->prepare($query);
+   if (!$stmt) 
+     fail('MySQL get_setting_title prepare', $stmt->error);
+   if (!$stmt->bind_param('s', $setting))
+     fail('MySQL get_setting_title bind_param', $stmt->error);
+   if (!$stmt->execute())
+     fail('MySQL get_setting_title execute', $stmt->error);
+   if (!$stmt->bind_result($help))
+     fail('MySQL get_setting_title bind_result', $stmt->error);
+   if (!$stmt->fetch() && $stmt->errno)
+     fail('MySQL get_setting_title fetch', $stmt->error);
+
+   $db_link->close();
+   return $help;
 } // end of get_setting_desc
 
 
@@ -111,7 +185,7 @@ function get_setting_desc( $setting ) {
 function get_all_settings() {
    include 'config.php';
 
-   $query = "SELECT * FROM `$db_settings` WHERE `setting` " .
+   /*$query = "SELECT * FROM `$db_settings` WHERE `setting` " .
       "NOT LIKE '%template%'";
    $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
       or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
@@ -126,7 +200,35 @@ function get_all_settings() {
    $settings = array();
    while( $row = mysqli_fetch_array( $result ) )
       $settings[] = $row;
-   return $settings;
+   return $settings;*/
+
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
+   }
+   $query = "SELECT * FROM `$db_settings` WHERE `setting` NOT LIKE '%template%'";
+   $stmt = $db_link->prepare($query);
+
+   if (!$stmt) 
+     fail('MySQL get_all_settings prepare', $stmt->error);
+   if (!$stmt->execute())
+     fail('MySQL get_all_settings execute', $stmt->error);
+   $meta = $stmt->result_metadata(); 
+
+   while ($field = $meta->fetch_field()) { 
+     $params[] = &$row[$field->name]; 
+   } 
+
+   call_user_func_array(array($stmt, 'bind_result'), $params);            
+   while ($stmt->fetch()) { 
+     foreach($row as $key => $val) { 
+         $c[$key] = $val * $level; 
+     } 
+     $setting_list = $c; 
+   } 
+   $stmt->close(); 
+   $db_link->close();
+   return $setting_list;
 
 } // end of get_all_settings
 
@@ -135,7 +237,7 @@ function get_all_settings() {
 function get_all_templates() {
    include 'config.php';
 
-   $query = "SELECT * FROM `$db_settings` WHERE `setting` LIKE '%template%'";
+   /*$query = "SELECT * FROM `$db_settings` WHERE `setting` LIKE '%template%'";
    $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
       or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
    $result = mysqli_query( $db_link, $query );
@@ -148,8 +250,35 @@ function get_all_templates() {
    $templates = array();
    while( $row = mysqli_fetch_array( $result ) )
       $templates[] = $row;
-   return $templates;
+   return $templates;*/
 
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
+   }
+   $query = "SELECT * FROM `$db_settings` WHERE `setting` LIKE '%template%'";
+   $stmt = $db_link->prepare($query);
+
+   if (!$stmt) 
+     fail('MySQL get_all_templates prepare', $stmt->error);
+   if (!$stmt->execute())
+     fail('MySQL get_all_templates execute', $stmt->error);
+   $meta = $stmt->result_metadata(); 
+
+   while ($field = $meta->fetch_field()) { 
+     $params[] = &$row[$field->name]; 
+   } 
+
+   call_user_func_array(array($stmt, 'bind_result'), $params);            
+   while ($stmt->fetch()) { 
+     foreach($row as $key => $val) { 
+         $c[$key] = $val * $level; 
+     } 
+     $template_list = $c; 
+   } 
+   $stmt->close(); 
+   $db_link->close();
+   return $template_list;
 } // end of get_all_settings
 
 
@@ -157,7 +286,7 @@ function get_all_templates() {
 function update_setting( $setting, $value ) {
    include 'config.php';
 
-   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+   /*$db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
       or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
 
    if( $setting != 'password' ) {
@@ -180,15 +309,40 @@ function update_setting( $setting, $value ) {
             '</i>; Query is: <code>' . $query . '</code>' );
          die( STANDARD_ERROR );
       }
+   }*/
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
    }
-
+   if( $setting != 'password' ) {
+      $query = "UPDATE `$db_settings` SET `value` = ? WHERE `setting` = ?";
+      $stmt = $db_link->prepare($query);
+      if (!$stmt) 
+        fail('MySQL update_setting prepare', $stmt->error);
+      if (!$stmt->bind_param('ss', $value, $setting))
+        fail('MySQL update_setting bind_param', $stmt->error);
+      if (!$stmt->execute())
+        fail('MySQL update_setting execute', $stmt->error);
+      $stmt->close();
+   } else {
+      $query = "UPDATE `$db_settings` SET `value` = MD5( ? ) WHERE `setting` = 'password'";
+      $stmt = $db_link->prepare($query);
+      if (!$stmt) 
+        fail('MySQL update_setting password prepare', $stmt->error);
+      if (!$stmt->bind_param('ss', $value, $setting))
+        fail('MySQL update_setting password bind_param', $stmt->error);
+      if (!$stmt->execute())
+        fail('MySQL update_setting password execute', $stmt->error);
+      $stmt->close();
+   }
+   $db_link->close();
 } // end of update_setting
 
 
 /*___________________________________________________________________________*/
 function update_settings( $settings ) {
    include 'config.php';
-   $db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
+   /*$db_link = mysqli_connect( $db_server, $db_user, $db_password, $db_database )
       or die( DATABASE_CONNECT_ERROR . mysqli_error($db_link) );
 
    foreach( $settings as $field => $value ) {
@@ -211,6 +365,37 @@ function update_settings( $settings ) {
             die( STANDARD_ERROR );
          }
       }
+   }*/
+   $db_link = new mysqli( $db_server, $db_user, $db_password, $db_database );
+   if ($db_link->connect_errno > 0) {
+      die('Unable to connect to database [' . $db_link->connect_error . ']');
    }
+   foreach( $settings as $field => $value ) {
+      $query = "UPDATE `$db_settings` SET `value` = ? WHERE `setting` = ?";
+      if( $field == 'password' ) {
+         if( $settings['passwordv'] != '' && $value == $settings['passwordv'] ) {
+            $query = "UPDATE `$db_settings` SET `value` = MD5( ? ) " .
+               "WHERE `setting` = 'password'";
+         } else
+            $query = '';
+      }
+      if( $query != '' ) {
+         $stmt = $db_link->prepare($query);
+         if (!$stmt) 
+           fail('MySQL update_settings prepare', $stmt->error);
+         if ($settings['passwordv'] != '' && $value == $settings['passwordv']) {
+            if (!$stmt->bind_param('s', $value))
+              fail('MySQL update_settings password bind_param', $stmt->error);
+         }
+         else {
+         if (!$stmt->bind_param('ss', $value, $setting))
+           fail('MySQL update_settings bind_param', $stmt->error);
+         }
+         if (!$stmt->execute())
+           fail('MySQL update_settings execute', $stmt->error);
+         $stmt->close();
+      }
+   }
+   $db_link->close();
 }
 ?>
