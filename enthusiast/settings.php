@@ -42,10 +42,10 @@ require_once( 'mod_settings.php' );
 
 $show_default = true;
 echo '<h1>Enthusiast 3 Settings</h1>';
-$action = ( isset( $_REQUEST["action"] ) ) ? $_REQUEST['action'] : '';
+//$action = ( isset( $_REQUEST["action"] ) ) ? $_REQUEST['action'] : '';
 
 /*______________________________________________________________________EDIT_*/
-if( $action == 'edit' ) {
+if( isset($_POST['submit']) ) {
    update_settings( $_POST );
    echo '<p class="success">Settings updated.</p>';
 }
@@ -212,7 +212,7 @@ if( $show_default ) {
    </td></tr>
 
    <tr class="rowshade"><td colspan="2" class="right">
-   <input type="submit" value="Update settings" />
+   <input type="submit" value="Update settings" name="submit" />
    <input type="reset" value="Reset settings" />
    </td></tr>
 
