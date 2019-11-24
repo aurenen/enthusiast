@@ -141,14 +141,11 @@ foreach( $owned as $id ) {
 
    // now check $lastupdated -- if more than 8 weeks ago, notify!
    $weeks = 0;
-   if( $stats['lastupdated'] && date( 'Y' ) != date( 'Y', strtotime( $stats['lastupdated'] ) ) ) {
-      $weeks = ( 52 - date( 'W', strtotime( $stats['lastupdated'] ) ) ) + date( 'W' );
-   } else if( $stats['lastupdated'] ) {
-      $weeks = date( 'W' ) - date( 'W', strtotime( $stats['lastupdated'] ) );
-   }
+   $lastupdated = new DateTime($stats['lastupdated']);
+   $currentdate = new DateTime();
 
    if( $stats['lastupdated'] == '' || // no last updated date
-      $weeks >= 8 ){
+      $lastupdated->diff($currentdate, true)->days > 55 ) {
       if( $header ) {
 ?>
          <h2>Neglected Listings Notification</h2>
