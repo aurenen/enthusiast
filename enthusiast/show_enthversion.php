@@ -22,5 +22,5 @@
 
  For more information please view the readme.txt file.
 ******************************************************************************/
-echo '3.1.6';
+echo '3.2.1';
 ?>
