@@ -670,19 +670,19 @@ function show_edit_forms() {
       <tr><td>
       Members List
       </td><td>
-      <textarea name="listtemplate" rows="10" cols="60"><?php echo $info['listtemplate'] ?></textarea>
+      <textarea name="listtemplate" rows="10" cols="60"><?php echo htmlspecialchars( $info['listtemplate'] ); ?></textarea>
       </td></tr>
 
       <tr class="rowshade"><td>
       Affiliates
       </td><td>
-      <textarea name="affiliatestemplate" rows="10" cols="60"><?php echo $info['affiliatestemplate'] ?></textarea>
+      <textarea name="affiliatestemplate" rows="10" cols="60"><?php echo htmlspecialchars( $info['affiliatestemplate'] ); ?></textarea>
       </td></tr>
 
       <tr><td>
       Statistics
       </td><td>
-      <textarea name="statstemplate" rows="10" cols="60"><?php echo $info['statstemplate'] ?></textarea>
+      <textarea name="statstemplate" rows="10" cols="60"><?php echo htmlspecialchars( $info['statstemplate'] ); ?></textarea>
       </td></tr>
 
       <tr class="rowshade"><td colspan="2" class="right">
