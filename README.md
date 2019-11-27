@@ -19,3 +19,9 @@ If you are using [this version](https://github.com/angelasabas/enthusiast) of En
 3. Download an [archive of this repository](https://github.com/Lysianthus/enthusiast/archive/master.zip). Extract the archive.
 4. Replace your current `enthusiast/` files with the `enthusiast/` files from this repository.
 5. In every fanlisting folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one.
+
+## Disclaimer
+
+- The original Enthusiast script was written by [Angela](https://github.com/angelasabas).
+- The conversion of mysql_* to PDO to make this PHP 7 compatible was done by [Lysianthus](https://github.com/Lysianthus/enthusiast).
+- Further modifications are customizations of my own (@aurenen).
