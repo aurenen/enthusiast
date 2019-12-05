@@ -252,4 +252,4 @@ if( $page_qty > 1 ) {
    }
    echo '</p>';
 }
-?>
+include ENTH_PATH . 'show_credit.php';

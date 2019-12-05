@@ -276,8 +276,4 @@ if( ( !isset( $hide_dropdown ) || $hide_dropdown == false ) &&
       'back?</a></p>';
 
 // show link back to Indiscripts
-?>
-<p class="show_owned_credits">
-<a href="http://scripts.indisguise.org">Powered by Enthusiast
-<?php include ENTH_PATH . 'show_enthversion.php' ?></a>
-</p>
+include ENTH_PATH . 'show_credit.php';

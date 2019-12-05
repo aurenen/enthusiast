@@ -507,9 +507,6 @@ if( $show_form ) {
 
    </form>
 
-   <p style="text-align: center;" class="show_join_credits"><a
-   href="http://scripts.indisguise.org">Powered by
-   Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?></a></p>
-<?php
+<?php 
+include ENTH_PATH . 'show_credit.php'; 
 }
-?>

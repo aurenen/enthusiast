@@ -264,8 +264,4 @@ if( ( isset( $show_list ) && $show_list ) &&
       '<a href="javascript:history.back()">Go back?</a></p>';
 
 // show link back to Indiscripts
-?>
-<p class="show_joined_credits">
-<a href="http://scripts.indisguise.org">Powered by Enthusiast
-<?php include ENTH_PATH . 'show_enthversion.php' ?></a>
-</p>
+include ENTH_PATH . 'show_credit.php';
