@@ -141,14 +141,11 @@ foreach( $owned as $id ) {
 
    // now check $lastupdated -- if more than 8 weeks ago, notify!
    $weeks = 0;
-   if( $stats['lastupdated'] && date( 'Y' ) != date( 'Y', strtotime( $stats['lastupdated'] ) ) ) {
-      $weeks = ( 52 - date( 'W', strtotime( $stats['lastupdated'] ) ) ) + date( 'W' );
-   } else if( $stats['lastupdated'] ) {
-      $weeks = date( 'W' ) - date( 'W', strtotime( $stats['lastupdated'] ) );
-   }
+   $lastupdated = new DateTime($stats['lastupdated']);
+   $currentdate = new DateTime();
 
    if( $stats['lastupdated'] == '' || // no last updated date
-      $weeks >= 8 ){
+      $lastupdated->diff($currentdate, true)->days > 55 ) {
       if( $header ) {
 ?>
          <h2>Neglected Listings Notification</h2>
@@ -177,73 +174,6 @@ foreach( $owned as $id ) {
 }
 echo '</ul>';
 
-echo '<h1>Enthusiast Updates</h1>';
 
-$updates_url = 'http://scripts.indisguise.org/category/enthusiast/feed/';
-$cachefilename = 'cache/updates'; // we need to check cache first
-$posts = '';
-if( !file_exists($cachefilename) || time() > filectime($cachefilename)+86400) { // one day
-    // retrieve from web
-    try {
-        $doc = new DOMDocument();
-        $success = @$doc->load($updates_url);
-        if( !$success ) {
-            throw new Exception('Feed has gone on vacation.');
-        }
-        
-        $i = 1;
-        foreach ($doc->getElementsByTagName('item') as $node) {
-            if( $i > 3 ) {
-                break;
-            } else {
-                $i++;
-            }
-
-            $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
-            $link = $node->getElementsByTagName('link')->item(0)->nodeValue;
-            $pubdate = $node->getElementsByTagName('pubDate')->item(0)->nodeValue;
-            $description = $node->getElementsByTagName('description')->item(0)->nodeValue;
-
-            $dayshort = date( 'D', strtotime( $pubdate ) );
-            $daylong = date( 'l', strtotime( $pubdate ) );
-            $monshort = date( 'M', strtotime( $pubdate ) );
-            $monlong = date( 'F', strtotime( $pubdate ) );
-            $yy = date( 'y', strtotime( $pubdate ) );
-            $yyyy = date( 'Y', strtotime( $pubdate ) );
-            $m = date( 'n', strtotime( $pubdate ) );
-            $mm = date( 'm', strtotime( $pubdate ) );
-            $d = date( 'j', strtotime( $pubdate ) );
-            $dd = date( 'd', strtotime( $pubdate ) );
-            $dth = date( 'jS', strtotime( $pubdate ) );
-            $ampm = date( 'a', strtotime( $pubdate ) );
-            $AMPM = date( 'A', strtotime( $pubdate ) );
-            $ap = rtrim( $ampm, 'm' );
-            $AP = rtrim( $AMPM, 'm' );
-            $min = date( 'i', strtotime( $pubdate ) );
-            $_12h = date( 'g', strtotime( $pubdate ) );
-            $_12hh = date( 'h', strtotime( $pubdate ) );
-            $_24h = date( 'G', strtotime( $pubdate ) );
-            $_24hh = date( 'H', strtotime( $pubdate ) );
-            
-            $posts .= <<<MARKUP
-                <h2>{$title}<br />
-                <small>{$daylong}, {$dth} {$monlong} {$yyyy} &bull; <a href="{$link}">permalink</a></small></h2>
-                <blockquote>{$description}</blockquote>
-MARKUP;
-        }
-
-        // try caching this now
-        $cachefile = fopen($cachefilename,'w');
-        fwrite($cachefile,$posts);
-        fclose($cachefile);
-
-    } catch( Exception $e ) {
-        $posts = file_get_contents($cachefilename);
-    }
-} else {
-    $posts = file_get_contents($cachefilename);
-}
-
-echo $posts;
 require_once( 'footer.php' );
 ?>

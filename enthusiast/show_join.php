@@ -178,6 +178,13 @@ if( isset( $_POST['enth_join'] ) && $_POST['enth_join'] == 'yes' ) {
          $url = 'http://' . $url;
    }
 
+   if( !isset($_POST['enth_name'])) { die("No Direct Access"); }  // Make sure the form has actually been submitted for honeypot
+   $spam = $_POST['honeyurl']; // This is our Honeypot field
+
+   if($spam) {  // If the Honeypot field has been filled in
+      die("lol go away"); 
+   }
+
    foreach( $fields as $field )
       $values[$field] = clean( $_POST["enth_$field"] );
 
@@ -455,6 +462,14 @@ if( $show_form ) {
    <input type="text" name="enth_url" value="<?php echo $url ?>"
       class="show_join_url_field" />
    </p>
+
+   <!-- This is the honeyblog url -->   
+   <p class="honey_url" style="display: none;">
+   <span style="display: block;" class="honey_url_label">Blog
+   URL:</span>
+   <input type="text" name="honeyurl" class="show_honey_url_field" />
+   </p>
+   
 <?php
    if( count( $fields ) > 0 && !( file_exists( 'addform.inc.php' ) ) ) {
       foreach( $fields as $field ) {
@@ -492,9 +507,6 @@ if( $show_form ) {
 
    </form>
 
-   <p style="text-align: center;" class="show_join_credits"><a
-   href="http://scripts.indisguise.org">Powered by
-   Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?></a></p>
-<?php
+<?php 
+include ENTH_PATH . 'show_credit.php'; 
 }
-?>

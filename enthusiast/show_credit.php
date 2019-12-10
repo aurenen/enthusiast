@@ -22,5 +22,8 @@
 
  For more information please view the readme.txt file.
 ******************************************************************************/
-echo '3.2.1';
 ?>
+<p style="text-align: center;" class="show_credit">
+<a href="https://github.com/aurenen/enthusiast">Powered by Enthusiast
+<?php include ENTH_PATH . 'show_enthversion.php' ?></a>
+</p>

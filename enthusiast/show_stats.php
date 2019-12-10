@@ -40,6 +40,10 @@ if( $stats['lastupdated'] )
 else
 	$stats['lastupdated'] = 'No updates available.';
 
+if( $info['opened'] )
+  $info['opened'] = @date( get_setting( 'date_format' ),
+      strtotime( $info['opened'] ) );
+
 // new members?
 if( isset( $stats['newmembers'] ) && $stats['newmembers'] == '' )
    $stats['newmembers'] = 'No new members.';
@@ -65,6 +69,7 @@ $cats = rtrim( $cats, ', ' );
 
 // customize template
 $template = $info['statstemplate'];
+$template = str_replace( '$$stat_opened$$', $info['opened'], $template );
 $template = str_replace( '$$stat_updated$$', $stats['lastupdated'],
    $template );
 $template = str_replace( '$$stat_approved$$', $stats['total'], $template );
