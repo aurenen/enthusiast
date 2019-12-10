@@ -16,12 +16,13 @@ If you are using [this version](https://github.com/angelasabas/enthusiast) of En
 
 1. **Back up all your current Enthusiast configurations, files, and databases first.**
 2. Take note of your database information in all your `config.php` files.
-3. Download an [archive of this repository](https://github.com/Lysianthus/enthusiast/archive/master.zip). Extract the archive.
-4. Replace your current `enthusiast/` files with the `enthusiast/` files from this repository.
-5. In every fanlisting folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one.
+3. Download a ZIP copy of this repository, then extract the contents.
+4. Edit the contents of `enthusiast\config.sample.php` with your database information and save it as `enthusiast/config.php`.
+5. Replace your current installation files with the contents of the `enthusiast/` folder from this repository.
+6. In every fanlisting folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one.
 
 ## Disclaimer
 
 - The original Enthusiast script was written by [Angela](https://github.com/angelasabas).
 - The conversion of mysql_* to PDO to make this PHP 7 compatible was done by [Lysianthus](https://github.com/Lysianthus/enthusiast).
-- Further modifications are customizations of my own (@aurenen).
+- Further modifications are customizations of my own (@aurenen). Check [commit logs](https://github.com/aurenen/enthusiast/commits/dev) for details (changes are tested on `dev` first, before merging into `master`).
