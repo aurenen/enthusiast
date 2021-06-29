@@ -548,7 +548,7 @@ function parse_affiliates_template( $id, $listing = '' ) {
    }
    $result->setFetchMode(PDO::FETCH_ASSOC);
    $setting = $result->fetch();
-   $template = $setting['value'];
+   $template = stripslashes($setting['value']);
 
    $listing = trim( $listing );
 

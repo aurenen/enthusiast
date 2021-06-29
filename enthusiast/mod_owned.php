@@ -1697,7 +1697,7 @@ function parse_owned_template( $id ) {
    // get listing stats now
    $stats = get_listing_stats( $info['listingid'] );
 
-   $formatted = str_replace( 'enth3-url', $info['url'], $setting['value'] );
+   $formatted = str_replace( 'enth3-url', $info['url'], stripslashes($setting['value']) );
    $formatted = str_replace( 'enth3-subject', $info['subject'], $formatted );
    $formatted = str_replace( 'enth3-title', $info['title'], $formatted );
    $formatted = str_replace( 'enth3-desc', $info['desc'], $formatted );

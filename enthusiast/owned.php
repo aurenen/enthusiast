@@ -93,7 +93,7 @@ if( $action == 'template' ) {
          src="help.gif" width="42" height="19" border="0"
          alt=" click for help on this setting" /></a>
       </td><td>
-      <textarea name="header" rows="5" cols="65"><?php echo $header ?></textarea>
+      <textarea name="header" rows="5" cols="65"><?php echo htmlspecialchars( stripslashes($header) ); ?></textarea>
       </td></tr>
 
       <tr class="rowshade"><td>
@@ -102,7 +102,7 @@ if( $action == 'template' ) {
          src="help.gif" width="42" height="19" border="0"
          alt=" click for help on this setting" /></a>
       </td><td>
-      <textarea name="template" rows="5" cols="65"><?php echo $template ?></textarea>
+      <textarea name="template" rows="5" cols="65"><?php echo htmlspecialchars( stripslashes($template) ); ?></textarea>
       </td></tr>
 
       <tr><td>
@@ -111,7 +111,7 @@ if( $action == 'template' ) {
          src="help.gif" width="42" height="19" border="0"
          alt=" click for help on this setting" /></a>
       </td><td>
-      <textarea name="footer" rows="5" cols="65"><?php echo $footer ?></textarea>
+      <textarea name="footer" rows="5" cols="65"><?php echo htmlspecialchars( stripslashes($footer) ); ?></textarea>
       </td></tr>
 
       <tr class="rowshade"><td colspan="2" class="right">

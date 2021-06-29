@@ -46,7 +46,7 @@ function get_setting( $setting ) {
    }
    $result->setFetchMode(PDO::FETCH_ASSOC);
    $row = $result->fetch();
-   return $row['value'];
+   return stripslashes($row['value']);
 
 } // end of get_setting
 
